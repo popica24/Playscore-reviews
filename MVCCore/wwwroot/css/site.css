@@ -1,0 +1,60 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    background-color: #202634;
+}
+
+.sidenav {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: #283044;
+}
+
+.game-title-container {
+    position: fixed;
+    background-color: #283044;
+    top: 0px;
+    left: 0px;
+    z-index: -1;
+}
+
+.content-tab {
+    margin-top: 12vh;
+}
+
+.review-container {
+    font-size: 14px;
+}
+
+.game-title {
+}
+.login-container{
+    position:fixed;
+    bottom : 0;
+    color : white;
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: start;
+}

@@ -1,0 +1,3 @@
+﻿https://learn.microsoft.com/en-us/ef/core/modeling/relationships/many-to-many
+
+https://learn.microsoft.com/en-us/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-7.0 // Usermodel ca si clasa custom pentru Identity

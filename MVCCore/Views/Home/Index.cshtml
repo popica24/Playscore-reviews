@@ -1,0 +1,27 @@
+﻿@model List<GameModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<span class="display-5 text-white " style="font-weight: 400;">Game Catalogue</span>
+<div class="container my-5">
+    <div class="row">
+        @if (Model != null)
+        {
+            foreach (var game in Model)
+            {
+                <div class="card m-2" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">@game.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">@game.Category</h6>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">@game.AgeRating</h6>
+                        <p class="card-text">@game.Description</p>
+                        <a asp-action="Index" asp-controller="Game" asp-route-gameId="@game.Id" class="card-link">Read More</a>
+                    </div>
+                </div>
+            }
+
+        }
+    </div>
+
+</div>

@@ -1,0 +1,56 @@
+﻿@using System.Security.Claims;
+@model MVCCore.Models.ReviewModel
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="OnPostCreateReview" asp-controller="Game" asp-route-gameId="@Model.GameId" method="post">
+            <input type="hidden" asp-for="GameId" value="@Model.GameId" />
+            <input type="hidden" asp-for="UserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)"/>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Username" class="form-control" value="@User.Identity.Name" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Review" class="control-label"></label>
+                <textarea asp-for="Review" class="form-control" placeholder="What do you think ?"></textarea>
+                <span asp-validation-for="Review" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Stars" id="starsInput" />
+
+                <div class="d-flex flex-row text-white">
+                    <span class="mx-2" onclick="setStars(1)"><i class="rate bi bi-star"></i></span>
+                    <span class="mx-2" onclick="setStars(2)"><i class="rate bi bi-star"></i></span>
+                    <span class="mx-2" onclick="setStars(3)"><i class="rate bi bi-star"></i></span>
+                    <span class="mx-2" onclick="setStars(4)"><i class="rate bi bi-star"></i></span>
+                    <span class="mx-2" onclick="setStars(5)"><i class="rate bi bi-star"></i></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-secondary" />
+            </div>
+        </form>
+        <label class="text-warning">@ViewData["ValidateMessage"]</label>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script>
+    function setStars(number) {
+        $('.rate').slice(0, number).each(function () {
+            $(this).removeClass('bi-star').addClass('bi-star-fill');
+        });
+
+        $('.rate').slice(number).each(function () {
+            if ($(this).hasClass('bi-star-fill')) {
+                $(this).removeClass('bi-star-fill').addClass('bi-star');
+            }
+        });
+        $('#starsInput').val(number)
+    }
+</script>
