@@ -2,12 +2,20 @@
 using MVCCore.Data;
 using MVCCore.Models.Enumerations;
 using MVCCore.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace MVCCore.Services
 {
     public static class SeedData
     {
-        public static void Initalize(IServiceProvider serviceProvider)
+        public static async Task SeedDatabase(IServiceProvider serviceProvider)
+        {
+            await InitalizeDbData(serviceProvider);
+            await InitializeDbRoles(serviceProvider);
+            await InitializeDbUsers(serviceProvider);
+        }
+
+        private static async Task InitalizeDbData(IServiceProvider serviceProvider)
         {
             using var context = new PlayscoreDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<PlayscoreDbContext>>());
@@ -19,7 +27,7 @@ namespace MVCCore.Services
             {
                 return;
             }
-            context.Games.AddRange(new GameModel
+            await context.Games.AddRangeAsync(new GameModel
             {
                 Name = "Call of Duty: Modern Warfare",
                 Description = "A first-person shooter game set in a modern warfare setting.",
@@ -89,7 +97,39 @@ namespace MVCCore.Services
         Category = GameCategory.RPG,
         AgeRating = AgeRating.PEGI12
     });
-            context.SaveChanges();
+          await context.SaveChangesAsync();
+        }
+  
+        private static async Task InitializeDbRoles(IServiceProvider serviceProvider)
+        {
+            using var context = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var roles = new[] { "Admin", "User" };
+            foreach (var role in roles)
+            {
+                if (!await context.RoleExistsAsync(role))
+                    await context.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        private static async Task InitializeDbUsers(IServiceProvider serviceProvider)
+        {
+            using var context = serviceProvider.GetRequiredService<UserManager<UserModel>>();
+
+            string email = "admin@playscore.com";
+            string password = "Admin1234_";
+
+            if(await context.FindByEmailAsync(email) == null)
+            {
+                var user = new UserModel();
+                user.CustomUsername = "Admin";
+                user.UserName = email;
+                user.Email = email;
+                user.EmailConfirmed = true;
+
+               await context.CreateAsync(user, password);
+                var role = RoleEnumeration.Admin.ToString();
+                await context.AddToRoleAsync(user,role);
+            }
         }
     }
 }

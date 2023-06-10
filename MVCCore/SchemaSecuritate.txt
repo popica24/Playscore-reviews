@@ -1,0 +1,24 @@
+﻿--- Schema de securitate ---
+
+Resurse:
+
+Useri
+Review-uri
+Roluri
+Jocuri
+
+Un admin poate face ceea ce face si un user.
+
+Permisiuni pentru admin:
+"DELETE" pe Useri
+"DELETE" pe Review-uri
+"PUT" pe Roluri
+"DELETE" pe Jocuri
+"POST" pe Jocuri
+
+Permisiuni pentru utilizator:
+
+"PUT"/"DELETE" pe Review-uri (doar pentru review-urile proprii)
+"GET" pe Review-uri
+"POST" pe Review-uri
+"GET" pe Jocuri

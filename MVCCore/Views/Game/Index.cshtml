@@ -12,17 +12,7 @@
 <div class="container">
 
     @await Html.PartialAsync("Shared/_GameDetailsPartial",Model);
-    @if (User.Identity.IsAuthenticated)
-    {
-        @await Html.PartialAsync("Shared/_CreateReviewPartial", reviewToCreate)
-        ;
-        
-    }
-    else
-    {
-        <span class="text-white">You must be logged in to comment</span>
-    }
-
+    @await Html.PartialAsync("Shared/_CreateReviewPartial", reviewToCreate);
     @if (Model.Reviews != null && Model.Reviews.Any())
     {
         @await Html.PartialAsync("Shared/_PaginatedListPartial",Model.Reviews)

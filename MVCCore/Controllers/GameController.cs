@@ -8,6 +8,7 @@ using MVCCore.Services;
 namespace MVCCore.Controllers
 {
     [Route("{gameId}/")]
+    
     public class GameController : Controller
     {
         private readonly PlayscoreDbContext _context;
@@ -35,7 +36,7 @@ namespace MVCCore.Controllers
             return View(game);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> OnPostCreateReview(ReviewModel request)

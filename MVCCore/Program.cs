@@ -11,6 +11,7 @@ builder.Services.AddDbContext<PlayscoreDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<UserModel>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<PlayscoreDbContext>();
 
 // Add services to the container.
@@ -21,7 +22,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    SeedData.Initalize(services);
+    await SeedData.SeedDatabase(services);
 }
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

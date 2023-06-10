@@ -3,3 +3,5 @@
 https://stackoverflow.com/questions/40767980/generate-a-composite-unique-constraint-index-in-ef-core (Enforced uniqueness pentru tupla UserId,GameId)
 
 https://learn.microsoft.com/en-us/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-7.0 (Usermodel ca si clasa custom pentru Identity)
+
+https://learn.microsoft.com/en-us/answers/questions/623030/assign-user-to-role-during-registration (Rolul de user la inregistrare)
