@@ -1,3 +1,18 @@
+
+(Important)
+---Pentru usurarea verificarilor de catre evaluator---
+In jocul World of Warcraft sunt create 8 review-uri de catre 8 useri, pentru a se observa paginarea.
+
+Login admin : 
+admin@playscore.com
+FOOfoo1_
+
+Login user:
+user3@playscore.com
+FOOfoo1_
+
+(Important)
+
 --- Baza de date ---
 Am creat modelele pentru baza de date:
 GameModel, UserModel, ReviewModel

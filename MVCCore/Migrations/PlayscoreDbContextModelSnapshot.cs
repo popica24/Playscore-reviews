@@ -63,7 +63,7 @@ namespace MVCCore.Migrations
                     b.Property<DateTime>("DateAdded")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 10, 12, 33, 5, 266, DateTimeKind.Local).AddTicks(725));
+                        .HasDefaultValue(new DateTime(2023, 6, 11, 2, 2, 49, 692, DateTimeKind.Local).AddTicks(310));
 
                     b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier");

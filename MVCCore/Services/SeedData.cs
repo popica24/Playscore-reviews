@@ -13,6 +13,7 @@ namespace MVCCore.Services
             await InitalizeDbData(serviceProvider);
             await InitializeDbRoles(serviceProvider);
             await InitializeDbUsers(serviceProvider);
+            await InitializeReviews(serviceProvider);
         }
 
         private static async Task InitalizeDbData(IServiceProvider serviceProvider)
@@ -115,20 +116,64 @@ namespace MVCCore.Services
         {
             using var context = serviceProvider.GetRequiredService<UserManager<UserModel>>();
 
-            string email = "admin@playscore.com";
-            string password = "Admin1234_";
+            string password = "FOOfoo1_";
 
-            if(await context.FindByEmailAsync(email) == null)
+            for (int i = 1; i <= 10; i++)
             {
-                var user = new UserModel();
-                user.CustomUsername = "Admin";
-                user.UserName = email;
-                user.Email = email;
-                user.EmailConfirmed = true;
+                string userEmail = $"user{i}@playscore.com";
 
-               await context.CreateAsync(user, password);
-                var role = RoleEnumeration.Admin.ToString();
-                await context.AddToRoleAsync(user,role);
+                if (await context.FindByEmailAsync(userEmail) == null)
+                {
+                    var user = new UserModel();
+                    user.CustomUsername = $"User{i}";
+                    user.UserName = userEmail;
+                    user.Email = userEmail;
+                    user.EmailConfirmed = true;
+
+                    await context.CreateAsync(user, password);
+                    if (i == 1)
+                    {
+                        user.UserName = "admin@playscore.com";
+                        user.Email = "admin@playscore.com";
+                        var role = RoleEnumeration.Admin.ToString();
+                        await context.AddToRoleAsync(user, role);
+                    }
+                    else {
+                        var role = RoleEnumeration.User.ToString();
+                        await context.AddToRoleAsync(user, role);
+                    }
+                }
+            }
+
+        }
+  
+        private static async Task InitializeReviews(IServiceProvider serviceProvider)
+        {
+            using var context = new PlayscoreDbContext(
+                serviceProvider.GetRequiredService<DbContextOptions<PlayscoreDbContext>>());
+            var game = await context.Games.Include(r => r.Reviews).SingleOrDefaultAsync(x => x.Name == "World of Warcraft");
+
+            if (!game.Reviews.Any())
+            {
+                List<ReviewModel> reviewsList = new List<ReviewModel>();
+                Random random = new();
+                foreach (var user in await context.Users.ToListAsync())
+                {
+                    string userEmail = user.UserName;
+                    var review = new ReviewModel();
+                    review.Username = userEmail;
+                    review.Review = $"This is reviewed by {user.CustomUsername}.";
+                    review.DateAdded = DateTime.Now;
+                    review.Stars = random.Next(1, 6);
+                    review.GameId = game.Id;
+                    review.UserId = user.Id;
+
+                    reviewsList.Add(review);
+                }
+
+
+                await context.Reviews.AddRangeAsync(reviewsList);
+                await context.SaveChangesAsync();
             }
         }
     }
