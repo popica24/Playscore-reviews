@@ -37,7 +37,7 @@ namespace MVCCore.Data
 
             modelBuilder.Entity<ReviewModel>()
            .HasIndex(r => new {r.UserId,r.GameId})
-           .IsUnique();
+           .IsUnique(); // Composite unique index
 
             modelBuilder.Entity<GameModel>()
                  .Property(x => x.Id)

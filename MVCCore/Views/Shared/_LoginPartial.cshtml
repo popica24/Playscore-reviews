@@ -6,7 +6,9 @@
 <ul class="navbar-nav ">
 @if (SignInManager.IsSignedIn(User))
 {
-
+    <li class="nav-item">
+        <span class="text-white">@User.Claims.FirstOrDefault(c => c.Type == "CustomUsername")?.Value </span>
+    </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button id="logout" type="submit" class="text-white nav-link btn btn-link">Logout</button>

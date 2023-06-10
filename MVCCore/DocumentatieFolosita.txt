@@ -1,0 +1,5 @@
+﻿https://learn.microsoft.com/en-us/ef/core/modeling/relationships/many-to-many (Nefolosit)
+
+https://stackoverflow.com/questions/40767980/generate-a-composite-unique-constraint-index-in-ef-core (Enforced uniqueness pentru tupla UserId,GameId)
+
+https://learn.microsoft.com/en-us/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-7.0 (Usermodel ca si clasa custom pentru Identity)

@@ -22,6 +22,7 @@ namespace MVCCore.Controllers
 
         public async Task<IActionResult> IndexAsync()
         {
+            var a = User.FindFirstValue("CustomUsername");
             var games = await _context.Games.ToListAsync();
             return View(games);
         }
