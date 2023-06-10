@@ -36,7 +36,7 @@ namespace MVCCore.Data
                 .HasForeignKey(u => u.UserId);//Many reviews to one user
 
             modelBuilder.Entity<ReviewModel>()
-           .HasIndex(r => r.UserId)
+           .HasIndex(r => new {r.UserId,r.GameId})
            .IsUnique();
 
             modelBuilder.Entity<GameModel>()

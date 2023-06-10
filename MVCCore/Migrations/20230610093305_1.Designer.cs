@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCCore.Migrations
 {
     [DbContext(typeof(PlayscoreDbContext))]
-    [Migration("20230609193907_1")]
+    [Migration("20230610093305_1")]
     partial class _1
     {
         /// <inheritdoc />
@@ -66,7 +66,7 @@ namespace MVCCore.Migrations
                     b.Property<DateTime>("DateAdded")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 9, 22, 39, 6, 971, DateTimeKind.Local).AddTicks(4802));
+                        .HasDefaultValue(new DateTime(2023, 6, 10, 12, 33, 5, 266, DateTimeKind.Local).AddTicks(725));
 
                     b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier");
@@ -90,7 +90,7 @@ namespace MVCCore.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("UserId", "GameId")
                         .IsUnique();
 
                     b.ToTable("Reviews");

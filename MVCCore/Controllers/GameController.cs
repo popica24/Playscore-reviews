@@ -40,6 +40,7 @@ namespace MVCCore.Controllers
         [Route("create")]
         public async Task<IActionResult> OnPostCreateReview(ReviewModel request)
         {
+
             if(request==null)
             {
                 return RedirectToAction("Index", "Game", new { gameId = request.GameId });

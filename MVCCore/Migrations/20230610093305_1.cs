@@ -180,7 +180,7 @@ namespace MVCCore.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Review = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 9, 22, 39, 6, 971, DateTimeKind.Local).AddTicks(4802)),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 10, 12, 33, 5, 266, DateTimeKind.Local).AddTicks(725)),
                     Stars = table.Column<int>(type: "int", nullable: false),
                     GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
@@ -247,9 +247,9 @@ namespace MVCCore.Migrations
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_UserId",
+                name: "IX_Reviews_UserId_GameId",
                 table: "Reviews",
-                column: "UserId",
+                columns: new[] { "UserId", "GameId" },
                 unique: true);
         }
 
