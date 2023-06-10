@@ -8,7 +8,20 @@
         <div class="d-flex flex-column justify-content-start">
 
             <div class="d-flex flex-row align-items-center">
-                <span class="lead pe-2">@review.Username | </span>
+                <span class="lead pe-2">@review.Username 
+                   
+                    
+                  
+                    
+                   </span>
+                @if (review.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                {
+                        @using (Html.BeginForm("OnDeleteReview", "Game", new { gameId = review.GameId, requestId = review.Id }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        }
+                    }
                 @for (int i = 1; i <= review.Stars; i++)
                 {
                     <span class="mx-2"><i class="bi bi-star-fill"></i></span>

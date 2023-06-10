@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="OnPostCreateReview" asp-controller="Game" asp-route-gameId="@Model.GameId" method="post">
+        <form asp-action="OnPostCreateReview" asp-controller="Review" asp-route-gameId="@Model.GameId" method="post">
             <input type="hidden" asp-for="GameId" value="@Model.GameId" />
             <input type="hidden" asp-for="UserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)"/>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

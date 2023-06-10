@@ -18,7 +18,7 @@ Permisiuni pentru admin:
 
 Permisiuni pentru utilizator:
 
-"PUT"/"DELETE" pe Review-uri (doar pentru review-urile proprii)
+"DELETE" pe Review-uri (doar pentru review-urile proprii)
 "GET" pe Review-uri
 "POST" pe Review-uri
 "GET" pe Jocuri

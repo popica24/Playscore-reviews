@@ -1,62 +1,169 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCCore.Data;
 using MVCCore.Models;
-using MVCCore.Services;
+using MVCCore.Models.Enumerations;
 
 namespace MVCCore.Controllers
 {
-    [Route("{gameId}/")]
-    
+    [Authorize(Roles = "Admin")]
+    [Route("manage/[controller]/[action]")]
     public class GameController : Controller
     {
         private readonly PlayscoreDbContext _context;
-        private readonly ILogger<HomeController> _logger;
-        public GameController(ILogger<HomeController> logger, PlayscoreDbContext context)
+
+        public GameController(PlayscoreDbContext context)
         {
-            _logger = logger;   
             _context = context;
         }
 
-        [Route("")]
-        public async Task<IActionResult> Index(Guid gameId, int pageIndex = 1, int pageSize = 3)
+        // GET: manage/game
+        [HttpGet("")]
+        public async Task<IActionResult> Index()
         {
-            var game = await _context.Games.FirstOrDefaultAsync(x=>x.Id == gameId);
-            var reviews = _context.Reviews.Where(x => x.GameId == gameId);
-            game.Reviews = await PaginatedList<ReviewModel>.CreateAsync(reviews,pageIndex, pageSize);
-            try
-            {
-                game.Rating = await reviews.SumAsync(x => x.Stars) / await reviews.CountAsync();
-            }
-            catch(DivideByZeroException)
-            {
-                game.Rating = 0;
-            }
-            return View(game);
+            return _context.Games != null ?
+                View(await _context.Games.ToListAsync()) :
+                Problem("Entity set 'PlayscoreDbContext.Games' is null.");
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [Route("create")]
-        public async Task<IActionResult> OnPostCreateReview(ReviewModel request)
+        // GET: manage/game/details/{id}
+        [HttpGet("details/{id}")]
+        public async Task<IActionResult> Details(Guid? id)
         {
+            if (id == null || _context.Games == null)
+            {
+                return NotFound();
+            }
 
-            if(request==null)
+            var gameModel = await _context.Games
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (gameModel == null)
             {
-                return RedirectToAction("Index", "Game", new { gameId = request.GameId });
+                return NotFound();
             }
-            await _context.Reviews.AddAsync(request);
-            try
+
+            return View(gameModel);
+        }
+
+        // GET: manage/game/create
+        [HttpGet("create")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: manage/game/create
+        [HttpPost("create")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Rating,Category,AgeRating")] GameModel gameModel)
+        {
+            if (ModelState.IsValid)
             {
+                gameModel.Id = Guid.NewGuid();
+                _context.Add(gameModel);
                 await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            catch(Exception ex)
+            return View(gameModel);
+        }
+
+        // GET: manage/game/edit/{id}
+        [HttpGet("edit/{id}")]
+        public async Task<IActionResult> Edit(Guid? id)
+        {
+            if (id == null || _context.Games == null)
             {
-                _logger.Log(LogLevel.Information, ex.Message);
-                ViewData["ValidateMessage"] = "Already reviewed the game !";
+                return NotFound();
             }
-            return RedirectToAction("Index","Game", new { gameId = request.GameId });
+
+            var gameModel = await _context.Games.FindAsync(id);
+            if (gameModel == null)
+            {
+                return NotFound();
+            }
+            return View(gameModel);
+        }
+
+        // POST: manage/game/edit/{id}
+        [HttpPost("edit/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Rating,Category,AgeRating")] GameModel gameModel)
+        {
+            if (id != gameModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(gameModel);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!GameModelExists(gameModel.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(gameModel);
+        }
+
+        // GET: manage/game/delete/{id}
+        [HttpGet("delete/{id}")]
+        public async Task<IActionResult> Delete(Guid? id)
+        {
+            if (id == null || _context.Games == null)
+            {
+                return NotFound();
+            }
+
+            var gameModel = await _context.Games
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (gameModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(gameModel);
+        }
+
+        // POST: manage/game/delete/{id}
+        [HttpPost("delete/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            if (_context.Games == null)
+            {
+                return Problem("Entity set 'PlayscoreDbContext.Games' is null.");
+            }
+            var gameModel = await _context.Games.FindAsync(id);
+            if (gameModel != null)
+            {
+                _context.Games.Remove(gameModel);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool GameModelExists(Guid id)
+        {
+            return (_context.Games?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

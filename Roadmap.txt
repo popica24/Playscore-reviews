@@ -1,0 +1,42 @@
+--- Baza de date ---
+Am creat modelele pentru baza de date:
+GameModel, UserModel, ReviewModel
+
+-- Relatiile dintre modele
+Un joc poate avea mai multe review-uri -> One to many
+Un user poate lasa mai multe review-uri -> One to many
+Un joc poate avea un singur review de la un user -> Index compus pentru cheile <UserId,GameId>
+
+--- Entity framework ---
+Am folosit metoda code-first pentru a crea baza de date
+Am implementat un sistem simplu de login bazat pe email,parola si roluri
+
+Clasa PlayscoreDbContext este clasa de tip data layer care mosteneste clasa IdentityDBContext<UserModel>
+Clasa IdentityDBContext este responsabila de managing-ul userilor intr-o baza de date
+Am specificat UserModel pentru ca am folosit un model custom, care mosteneste clasa IdentityModel.
+(Pentru schema de securitate vezi SchemaSecuritate).
+
+--- Paginated List ---
+Clasa PaginatedList este principalul obiectiv al acestui proiect
+Metoda CreateAsync este folosita pentru a crea o lista generica de obiecte T
+Aceasta metoda ia un parametru IQueryable<T>, clasa extinsa de la IEnumerable pe care putem executa filtre de tipul WHere, OrderBy, Select etc
+Folosim IQueryable<T> deoarece aceasta metoda suporta "deffered execution", astfel este executat query-ul doar cand rezultatele sunt materializate
+IQueryable<T> se foloseste cu orice ORM pentru a manipula date dintr-o baza de date.
+Metoda CreateAsync preia si doi parametrii de tipul int pentru a specifica indexul paginii cat si dimensiunea unei pagini.
+Observam constructorul privat, pe care il apelam doar din interiorul CreateAsync
+In constructor avem 3 parametrii, List<T> (pastram generalitatea), numarul de elemente, indexul si dimensiunea.
+Lista este creata prin linia : await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+In traducere : din sursa de tipul IQueryable, sarim indexul de pagini - 1 * cate elemente avem intr-o pagina, dupa care luam urmatoarele "numarElemente" elemnte din sursa
+Constructorul initializeaza proprietatile CurrentPage cat si TotalPages
+Clasa foloseste compozitia pentru a se comporta ca o lista, pe care o putem folosi ca si proprietate
+La fiecare click pe numarul paginii, se reapeleaza metoda Index din controller-ul Review, care preia 3 parametrii:
+Id ul jocului, indexul paginii cu valoarea default 1, dimensiunea paginii cu valorea default 3.
+
+
+--- Front end ---
+Am abordat un approach simplu, folosind bootstrap, putin jquery pentru stele si css minimal pentru culori custom si font-uri
+
+--- Am creat clasa SeedData pentru a initializa 10 jocuri, un cont de admin cat si rolurile
+
+--- GameController ---
+Am folosit metoda Scaffold pentru a crea GameController-ul cu operatii CRUD cu entity framework, si view-uri pe care le am modificat ulterior.
