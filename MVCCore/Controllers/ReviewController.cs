@@ -19,7 +19,7 @@ namespace MVCCore.Controllers
             _context = context;
         }
 
-        [Route("")]
+        [Route("details")]
         public async Task<IActionResult> Index(Guid gameId, int pageIndex = 1, int pageSize = 3)
         {
             var game = await _context.Games.FirstOrDefaultAsync(x => x.Id == gameId);
@@ -28,6 +28,7 @@ namespace MVCCore.Controllers
             try
             {
                 game.Rating = await reviews.SumAsync(x => x.Stars) / await reviews.CountAsync();
+                await _context.SaveChangesAsync();
             }
             catch (DivideByZeroException)
             {

@@ -9,11 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using MVCCore.Data;
 using MVCCore.Models;
 using MVCCore.Models.Enumerations;
+using MVCCore.Services;
 
 namespace MVCCore.Controllers
 {
     [Authorize(Roles = "Admin")]
-    [Route("manage/[controller]/[action]")]
+    [Route("manage")]
     public class GameController : Controller
     {
         private readonly PlayscoreDbContext _context;
@@ -25,11 +26,13 @@ namespace MVCCore.Controllers
 
         // GET: manage/game
         [HttpGet("")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5)
         {
+            var games = _context.Games;
+            var gamePage = await PaginatedList<GameModel>.CreateAsync(games, pageIndex, pageSize);
             return _context.Games != null ?
-                View(await _context.Games.ToListAsync()) :
-                Problem("Entity set 'PlayscoreDbContext.Games' is null.");
+                View(gamePage) :
+                Problem("There are no games in the records.");
         }
 
         // GET: manage/game/details/{id}

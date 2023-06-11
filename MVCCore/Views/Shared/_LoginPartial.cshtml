@@ -3,25 +3,26 @@
 @inject SignInManager<UserModel> SignInManager
 @inject UserManager<UserModel> UserManager
 
-<ul class="navbar-nav ">
+<div class="navbar-nav ">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <span class="text-white">@User.Claims.FirstOrDefault(c => c.Type == "CustomUsername")?.Value </span>
-    </li>
-    <li class="nav-item">
+    <div class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button id="logout" type="submit" class="text-white nav-link btn btn-link">Logout</button>
+                <button id="logout" type="submit" class="text-white nav-link btn btn-secondary">Logout</button>
         </form>
-    </li>
+    </div>
 }
 else
 {
-    <li class="nav-item">
-            <a class="text-white nav-link" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-            <a class="text-white nav-link" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+    <div class="d-flex flex-row align-items-center">
+            <div class="nav-item mx-2">
+                <a class="text-white btn btn-primary" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            </div>
+            <div class="nav-item mx-2">
+                <a class="text-white btn btn-secondary" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+            </div>
+        </div>
+
+   
 }
-</ul>
+</div>

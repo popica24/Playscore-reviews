@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCCore.Data;
 using MVCCore.Models;
+using MVCCore.Services;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -20,15 +21,17 @@ namespace MVCCore.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> IndexAsync()
+        [Route("")]
+        [Route("{searchName}")]
+        public async Task<IActionResult> Index(string? searchName = null,int pageIndex = 1,int pageSize = 6)
         {
-            var games = await _context.Games.ToListAsync();
-            return View(games);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            if (string.IsNullOrEmpty(searchName))
+            {
+                var gamePage = await PaginatedList<GameModel>.CreateAsync(_context.Games, pageIndex, pageSize);
+                return View(gamePage);
+            }
+            var page = await PaginatedList<GameModel>.CreateAsync(_context.Games.Where(g => g.Name.Contains(searchName)), pageIndex, pageSize);
+            return View(page);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

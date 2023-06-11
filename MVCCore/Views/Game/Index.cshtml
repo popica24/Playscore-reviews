@@ -1,31 +1,32 @@
-﻿@model IEnumerable<MVCCore.Models.GameModel>
+﻿@using MVCCore.Services;
+@model PaginatedList<MVCCore.Models.GameModel>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="text-white">Game manager</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table text-white">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model[0].Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model[0].Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Rating)
+                @Html.DisplayNameFor(model => model[0].Rating)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                @Html.DisplayNameFor(model => model[0].Category)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AgeRating)
+                @Html.DisplayNameFor(model => model[0].AgeRating)
             </th>
             <th></th>
         </tr>
@@ -56,4 +57,18 @@
         </tr>
 }
     </tbody>
+   
 </table>
+<div class="d-flex flex-row justify-content-center align-items-center text-center text-white">
+    @for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        if (i == Model.CurrentPage)
+        {
+            <a class="px-2 text-warning">@i</a>
+        }
+        else
+        {
+            <a asp-action="Index" asp-controller="Game" asp-route-pageIndex="@i" class=" px-2 text-white">@i</a>
+        }
+    }
+</div>
